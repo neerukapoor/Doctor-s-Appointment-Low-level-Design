@@ -14,7 +14,8 @@ public class App {
     public static void main(String[] args) throws Exception {
         System.out.println("Hello, World!");
         Scanner s = new Scanner(System.in);
-        DoctorRepository doctorRepository = new DoctorRepository();
+        DoctorRepository doctorRepository = DoctorRepository.createDoctorRepositoryInstance();
+        DoctorRepository doctorRepository1 = DoctorRepository.createDoctorRepositoryInstance();
         DoctorService doctorService = new DoctorService(doctorRepository);
         Doctor doctor1 = new Doctor("dheeraj", "1", new HashMap<>(), Specialization.CARDIOLOGIST);
         doctorService.registerDoctor(doctor1);
@@ -39,7 +40,7 @@ public class App {
         System.out.println("");
         doctorService.showAvailableSlotsBySpeciality(Specialization.CARDIOLOGIST);
 
-        PatientRepository patientRepository = new PatientRepository();
+        PatientRepository patientRepository = PatientRepository.createPatientRepository();
         PatientService patientService = new PatientService(patientRepository);
 
         Patient patient = new Patient("soma", "1", new HashMap<>());
@@ -48,7 +49,8 @@ public class App {
         Patient patient1 = new Patient("neha", "2", new HashMap<>());
         patientService.registerPatient(patient1);
 
-        BookingService bookingService = new BookingService(doctorRepository, patientRepository);
+        PatientRepository patientRepository1 = PatientRepository.createPatientRepository();
+        BookingService bookingService = new BookingService(doctorRepository1, patientRepository1);
         bookingService.registerBooking(patient1, doctor3, new TimeSlot("12:00", "12:30"));
         bookingService.registerBooking(patient, doctor3, new TimeSlot("12:00", "12:30"));
 

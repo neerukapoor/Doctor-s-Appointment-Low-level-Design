@@ -6,6 +6,16 @@ import entities.*;
 public class PatientRepository {
     HashMap<String, Patient>patients = new HashMap<>();
 
+    static PatientRepository patientRepository;
+
+    private PatientRepository() {}
+
+    public static PatientRepository createPatientRepository() {
+        if(patientRepository == null)
+            patientRepository = new PatientRepository();
+        return patientRepository;
+    }
+
     public void registerPatient(Patient patient) {
         if(patients.containsKey(patient.getPatientId()))
         {

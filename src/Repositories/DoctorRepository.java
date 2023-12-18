@@ -7,10 +7,18 @@ import exceptions.*;
 
 import entities.*;
 
-//Make this Singleton
 public class DoctorRepository {
     HashMap<String, Doctor>doctors = new HashMap<>();
     HashMap<Specialization, List<Doctor>> doctorsForSpecialization = new HashMap<>();
+
+    private static DoctorRepository doctorRepository;
+    private DoctorRepository() {}
+
+    public static DoctorRepository createDoctorRepositoryInstance() {
+        if(doctorRepository == null)
+            doctorRepository = new DoctorRepository();
+        return doctorRepository;
+    }   
 
     public void registerDoctor(Doctor doctor) {
         if(doctors.containsKey(doctor.getDoctorId())) {
