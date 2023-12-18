@@ -17,7 +17,7 @@ public class Doctor {
     }
 
     public void setSlots(HashMap<TimeSlot, Boolean> slot) {
-        this.slots = slots;
+        this.slots = slot;
     }
 
     public String getDoctorId() {

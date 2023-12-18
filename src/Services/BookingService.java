@@ -1,5 +1,6 @@
 package Services;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ import entities.Booking;
 public class BookingService {
     DoctorRepository doctorRepository;
     PatientRepository patientRepository;
-    HashMap<String, Booking> bookings = new HashMap<>();
+    HashMap<Integer, Booking> bookings = new HashMap<>();
     Map<String, List<TimeSlot>> patientSlots = new HashMap<>();
 
     static int index = 1;
@@ -49,7 +50,35 @@ public class BookingService {
         }
 
         // work from here
-
+        HashMap<TimeSlot, Boolean> doctorSlots = doctor.getSlots();
+        for(HashMap.Entry<TimeSlot, Boolean> slots: doctorSlots.entrySet()) {
+            if(timeSlot.getStartTime() == slots.getKey().getStartTime() && slots.getValue()) {
+                HashMap<TimeSlot, Boolean> newSlotList = new HashMap<>();
+                for(HashMap.Entry<TimeSlot, Boolean> existingSlots : doctorSlots.entrySet()) {
+                    if(existingSlots.getKey().getStartTime() != timeSlot.getStartTime()) {
+                        newSlotList.put(existingSlots.getKey(), existingSlots.getValue());
+                    }
+                    else {
+                        newSlotList.put(existingSlots.getKey(), false);
+                    }
+                }
+                doctor.setSlots(newSlotList);
+                Booking booking = new Booking(index++, doctor, patient, timeSlot);
+                bookings.put(booking.getBookingId(), booking);
+                System.out.println("Booked successfully, your booking id: " + booking.getBookingId());
+                return;
+            }
+            else if(timeSlot.getStartTime() == slots.getKey().getStartTime() && !slots.getValue()){
+                System.out.println("Doctor not available at this time slot ");
+                return;
+            }
+        }
+        System.out.println("Doctor not available at this time");
     }
 
+    public void showAllBookings() {
+        for(HashMap.Entry<Integer, Booking> booking: bookings.entrySet()) {
+            System.out.println("Booking id: " + booking.getKey() + ", Doctor Name: " + booking.getValue().getDoctor().getDoctorName() + ", at time: " + booking.getValue().getTimeSlot().getStartTime() + " to " + booking.getValue().getTimeSlot().getendTime() + ", Patient Name: " + booking.getValue().getPatient().getPatientName());
+        }
+    }
 }
